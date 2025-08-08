@@ -14,5 +14,5 @@ public class Car
     public Brand Brand { get; set; } = null!;
     public User Owner { get; set; } = null!;
     public ICollection<CarPhoto> Photos { get; set; } = new List<CarPhoto>();
-    public ICollection<FavoriteCar> FavoriteByUsers { get; set; } = new List<FavoriteCar>();
+    public ICollection<FavoriteCar> FavoriteByUsers { get; set; } = [];
 }

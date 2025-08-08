@@ -4,7 +4,7 @@ namespace CarShop.Application;
 
 public interface IUserService
 {
-    Task<IdentityResult> RegisterAsync(RegisterModel model);
+    Task<IdentityResult> RegisterAsync(RegisterDto dto);
     
-    Task<bool> LoginAsync(LoginModel model);
+    Task<AuthResponseDto> LoginAsync(LoginDto dto);
 }

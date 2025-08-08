@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CarShop.Domain;
 
-
 public class User : IdentityUser
 {
     public ICollection<Car> Cars { get; set; } = new List<Car>();
