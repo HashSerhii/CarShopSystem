@@ -16,7 +16,7 @@ public static class InfrastructureExtensions
     {
         
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(configuration.GetConnectionString("CarShopDbConnection")));
         
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>()
