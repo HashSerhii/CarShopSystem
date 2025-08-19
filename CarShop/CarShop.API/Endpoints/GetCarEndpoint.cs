@@ -1,8 +1,10 @@
 using CarShop.Application.DTOs;              
-using CarShop.Application.Queries;          
 using CarShop.Application.Mediator.Interfaces; 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using CarShop.API.Endpoints.Requests;
+using CarShop.API.Endpoints;
+using CarShop.Application.Queries;
 
 namespace CarShop.API.Endpoints;
 
@@ -10,20 +12,12 @@ public static class CarEndpoints
 {
     public static IEndpointRouteBuilder MapCarEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/cars", async (
-                [AsParameters] GetCarsQuery query,
+        app.MapGet(ApiRoutes.Cars, async (
+                [AsParameters] GetCarsRequest request,
                 IQueryHandler<GetCarsQuery, PagedResult<CarListItemDto>> handler,
                 CancellationToken ct) =>
             {
-                
-                var normalized = query with
-                {
-                    Page = query.Page <= 0 ? 1 : query.Page,
-                    PageSize = query.PageSize is <= 0 or > 100 ? 20 : query.PageSize,
-                    Sort = NormalizeSort(query.Sort)
-                };
-
-                var result = await handler.ExecuteAsync(normalized, ct);
+                var result = await handler.ExecuteAsync(request.ToQuery(), ct);
                 return Results.Ok(result);
             })
             .WithName("GetCars")
@@ -32,13 +26,4 @@ public static class CarEndpoints
 
         return app;
     }
-
-    private static string NormalizeSort(string? sort) =>
-        sort?.ToLowerInvariant() switch
-        {
-            "price_desc" => "price_desc",
-            "year_asc"   => "year_asc",
-            "year_desc"  => "year_desc",
-            _            => "price_asc" 
-        };
 }

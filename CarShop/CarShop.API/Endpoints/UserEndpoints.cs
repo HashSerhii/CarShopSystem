@@ -8,7 +8,7 @@ public static class UserEndpoints
 {
     public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/register", async (RegisterDto dto, IUserService userService) =>
+        app.MapPost(ApiRoutes.Register, async (RegisterDto dto, IUserService userService) =>
         {
             var result = await userService.RegisterAsync(dto);
             return result.Succeeded
@@ -16,7 +16,7 @@ public static class UserEndpoints
                 : Results.BadRequest(result.Errors);
         });
 
-        app.MapPost("/login", async (LoginDto dto, IUserService userService) =>
+        app.MapPost(ApiRoutes.Login, async (LoginDto dto, IUserService userService) =>
         {
             var authResult = await userService.LoginAsync(dto);
             return authResult is not null

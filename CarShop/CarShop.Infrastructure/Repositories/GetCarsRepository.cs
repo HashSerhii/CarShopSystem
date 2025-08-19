@@ -3,6 +3,7 @@ using CarShop.Application.Queries;
 using CarShop.Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 using CarShop.Domain;
+using CarShop.Application.Constants;
 
 
 namespace CarShop.Infrastructure.Repositories;
@@ -23,9 +24,9 @@ public class GetCarsRepository : IGetCarsRepository
 
         query = q.Sort switch
         {
-            "price_desc" => query.OrderByDescending(c => c.Price),
-            "year_asc" => query.OrderBy(c => c.Year),
-            "year_desc" => query.OrderByDescending(c => c.Year),
+            CarSort.PriceDesc => query.OrderByDescending(c => c.Price),
+            CarSort.YearAsc => query.OrderBy(c => c.Year),
+            CarSort.YearDesc => query.OrderByDescending(c => c.Year),
             _ => query.OrderBy(c => c.Price)
         };
 
