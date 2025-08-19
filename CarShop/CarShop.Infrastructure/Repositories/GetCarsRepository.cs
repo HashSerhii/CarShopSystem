@@ -14,7 +14,7 @@ public class GetCarsRepository : IGetCarsRepository
 
     public GetCarsRepository(AppDbContext db) => _db = db;
 
-    public async Task<PagedResult<CarListItemDto>> GetCarsAsync(GetCarsQuery q, CancellationToken cancellationToken)
+    public async Task<PagedResult<CarListItemModel>> GetCarsAsync(GetCarsQuery q, CancellationToken cancellationToken)
     {
         IQueryable<Car> query = _db.Cars.AsNoTracking();
 
@@ -35,7 +35,7 @@ public class GetCarsRepository : IGetCarsRepository
         var items = await query
             .Skip((q.Page - 1) * q.PageSize)
             .Take(q.PageSize)
-            .Select(c => new CarListItemDto(
+            .Select(c => new CarListItemModel(
                 c.Id,
                 c.Brand.Name,
                 c.Model,
@@ -45,6 +45,6 @@ public class GetCarsRepository : IGetCarsRepository
             ))
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<CarListItemDto>(items, total, q.Page, q.PageSize);
+        return new PagedResult<CarListItemModel>(items, total, q.Page, q.PageSize);
     }
 }

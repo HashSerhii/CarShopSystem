@@ -5,5 +5,5 @@ namespace CarShop.Application.Repositories;
 
 public interface IGetCarsRepository
 {
-    Task<PagedResult<CarListItemDto>> GetCarsAsync(GetCarsQuery query, CancellationToken ct);
+    Task<PagedResult<CarListItemModel>> GetCarsAsync(GetCarsQuery query, CancellationToken ct);
 }

@@ -14,7 +14,7 @@ public static class CarEndpoints
     {
         app.MapGet(ApiRoutes.Cars, async (
                 [AsParameters] GetCarsRequest request,
-                IQueryHandler<GetCarsQuery, PagedResult<CarListItemDto>> handler,
+                IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>> handler,
                 CancellationToken ct) =>
             {
                 var result = await handler.ExecuteAsync(request.ToQuery(), ct);
@@ -22,7 +22,7 @@ public static class CarEndpoints
             })
             .WithName("GetCars")
             .WithSummary("Returns a list of cars with filters, sorting")
-            .Produces<PagedResult<CarListItemDto>>(StatusCodes.Status200OK);
+            .Produces<PagedResult<CarListItemModel>>(StatusCodes.Status200OK);
 
         return app;
     }

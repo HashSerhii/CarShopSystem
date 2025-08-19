@@ -11,22 +11,19 @@ public class FavoritesRepository(AppDbContext db) : IAddFavoriteRepository, IGet
 	{
 		var exists = await db.Set<FavoriteCar>().AnyAsync(x => x.UserId == userId && x.CarId == carId, ct);
 		if (exists) return;
-		var favorite = new FavoriteCar { UserId = userId, CarId = carId };
-		db.Set<FavoriteCar>().Add(favorite);
+		db.Set<FavoriteCar>().Add(new FavoriteCar { UserId = userId, CarId = carId });
 		await db.SaveChangesAsync(ct);
 	}
 
-	public async Task<PagedResult<FavoriteDto>> GetFavoritesAsync(string userId, int page, int pageSize, CancellationToken ct)
+	public async Task<PagedResult<FavoriteModel>> GetFavoritesAsync(string userId, int page, int pageSize, CancellationToken ct)
 	{
 		var query = db.Set<FavoriteCar>().AsNoTracking().Where(f => f.UserId == userId);
 		var total = await query.CountAsync(ct);
 		var items = await query
-			.Include(f => f.Car).ThenInclude(c => c.Brand)
-			.Include(f => f.Car).ThenInclude(c => c.Photos)
 			.OrderBy(f => f.CarId)
 			.Skip((page - 1) * pageSize)
 			.Take(pageSize)
-			.Select(f => new FavoriteDto(
+			.Select(f => new FavoriteModel(
 				f.CarId,
 				f.Car.Brand.Name,
 				f.Car.Model,
@@ -36,6 +33,6 @@ public class FavoritesRepository(AppDbContext db) : IAddFavoriteRepository, IGet
 			))
 			.ToListAsync(ct);
 
-		return new PagedResult<FavoriteDto>(items, total, page, pageSize);
+		return new PagedResult<FavoriteModel>(items, total, page, pageSize);
 	}
 } 

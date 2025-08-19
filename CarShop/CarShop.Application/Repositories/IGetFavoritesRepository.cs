@@ -6,5 +6,5 @@ namespace CarShop.Application.Repositories;
 
 public interface IGetFavoritesRepository
 {
-	Task<PagedResult<FavoriteDto>> GetFavoritesAsync(string userId, int page, int pageSize, CancellationToken ct);
+	Task<PagedResult<FavoriteModel>> GetFavoritesAsync(string userId, int page, int pageSize, CancellationToken ct);
 } 

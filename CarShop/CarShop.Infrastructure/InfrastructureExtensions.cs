@@ -38,9 +38,9 @@ public static class InfrastructureExtensions
         services.AddSingleton<IMediator, Mediator>();
         
         // Handlers registration
-        services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemDto>>, GetCarsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>>, GetCarsQueryHandler>();
         services.AddScoped<ICommandHandler<AddFavoriteCommand>, AddFavoriteCommandHandler>();
-        services.AddScoped<IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteDto>>, GetFavoritesQueryHandler>();
+        services.AddScoped<IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteModel>>, GetFavoritesQueryHandler>();
         
         return services;
     }

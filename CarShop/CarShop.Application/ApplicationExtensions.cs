@@ -15,7 +15,7 @@ namespace CarShop.ApplicationExtensions
         {
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemDto>>, GetCarsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>>, GetCarsQueryHandler>();
             
             return services;
         }

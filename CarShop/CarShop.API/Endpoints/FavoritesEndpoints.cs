@@ -19,7 +19,7 @@ public static class FavoritesEndpoints
         })
         .WithSummary("Add car to favorites");
 
-        app.MapGet(ApiRoutes.Favorites, async ([AsParameters] GetFavoritesRequest request, IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteDto>> handler, CancellationToken ct) =>
+        app.MapGet(ApiRoutes.Favorites, async ([AsParameters] GetFavoritesRequest request, IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteModel>> handler, CancellationToken ct) =>
         {
             var result = await handler.ExecuteAsync(request.ToQuery(), ct);
             return Results.Ok(result);

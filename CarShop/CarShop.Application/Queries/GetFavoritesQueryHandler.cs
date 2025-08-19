@@ -5,8 +5,8 @@ using CarShop.Application.Repositories;
 namespace CarShop.Application.Queries;
 
 public sealed class GetFavoritesQueryHandler(IGetFavoritesRepository repository)
-	: IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteDto>>
+	: IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteModel>>
 {
-	public Task<PagedResult<FavoriteDto>> ExecuteAsync(GetFavoritesQuery query, CancellationToken cancellationToken) =>
+	public Task<PagedResult<FavoriteModel>> ExecuteAsync(GetFavoritesQuery query, CancellationToken cancellationToken) =>
 		repository.GetFavoritesAsync(query.UserId, query.Page, query.PageSize, cancellationToken);
 } 
