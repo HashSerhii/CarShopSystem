@@ -31,5 +31,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapUserEndpoints();
+app.MapCarEndpoints();
+app.MapFavoritesEndpoints();
 
 app.Run();
