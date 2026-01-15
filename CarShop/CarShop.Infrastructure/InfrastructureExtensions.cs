@@ -12,6 +12,7 @@ using CarShop.Infrastructure.Authentication;
 using CarShop.Application.DTOs;
 using CarShop.Application.Queries;
 using CarShop.Application.Commands;
+using CarShop.Application.Services;
 
 namespace CarShop.Infrastructure;
 
@@ -34,14 +35,18 @@ public static class InfrastructureExtensions
         services.AddScoped<IGetCarsRepository, GetCarsRepository>();
         services.AddScoped<IAddFavoriteRepository, FavoritesRepository>();
         services.AddScoped<IGetFavoritesRepository, FavoritesRepository>();
-        
+
+
         services.AddSingleton<IMediator, Mediator>();
         
-        // Handlers registration
         services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>>, GetCarsQueryHandler>();
         services.AddScoped<ICommandHandler<AddFavoriteCommand>, AddFavoriteCommandHandler>();
         services.AddScoped<IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteModel>>, GetFavoritesQueryHandler>();
-        
+        services.AddScoped<IQueryHandler<GetCarByIdQuery, CarDetailModel?>, GetCarByIdQueryHandler>();
+        services.AddScoped<ICommandHandler<CreateCarCommand, int>, CreateCarCommandHandler>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContext, UserContext>();
+        services.AddScoped<ICommandHandler<DeleteCarCommand, bool>, DeleteCarCommandHandler>();
         return services;
     }
 }

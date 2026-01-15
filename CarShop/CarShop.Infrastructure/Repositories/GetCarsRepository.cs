@@ -47,4 +47,51 @@ public class GetCarsRepository : IGetCarsRepository
 
         return new PagedResult<CarListItemModel>(items, total, q.Page, q.PageSize);
     }
+
+    public async Task<CarDetailModel?> GetCarByIdAsync(int carId, CancellationToken cancellationToken)
+    {
+        var car = await _db.Cars
+            .AsNoTracking()
+            .Include(c => c.Brand)
+            .Include(c => c.Photos)
+            .Where(c => c.Id == carId)
+            .Select(c => new CarDetailModel(
+                c.Id,
+                c.Brand.Name,
+                c.Model,
+                c.Year,
+                c.Price,
+                c.Description,
+                c.Photos.Select(p => p.Url).FirstOrDefault(),
+                c.Photos.Select(p => p.Url).ToList()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+        return car;
+    }
+
+    public async Task<int> AddCarAsync(Car car, CancellationToken cancellationToken)
+    {
+        await _db.Cars.AddAsync(car, cancellationToken);
+
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return car.Id;
+    }
+
+    public async Task<bool> DeleteCarAsync(int id, CancellationToken cancellationToken)
+    {
+        var car = await _db.Cars
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+
+        if (car == null)
+        {
+            return false;
+        }
+
+        _db.Cars.Remove(car);
+
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
 }
