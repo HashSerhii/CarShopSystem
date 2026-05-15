@@ -10,12 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddApplicationServices();
+builder.Services.AddFrontendCors(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
+await DataSeeder.SeedAsync(app.Services);
 await IdentityDbSeeder.SeedAsync(app.Services);
 
 if (app.Environment.IsDevelopment())
@@ -25,11 +27,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseFrontendCors();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapUserEndpoints();
+app.MapBrandsEndpoints();
 app.MapCarEndpoints();
 app.MapFavoritesEndpoints();
 

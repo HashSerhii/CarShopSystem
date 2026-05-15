@@ -1,0 +1,54 @@
+<div class="page sell">
+  <h1 class="page-title">Продати автомобіль</h1>
+  <p class="page-subtitle">Заповніть дані та додайте фото</p>
+
+  <mat-card class="form-card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Марка</mat-label>
+          <mat-select formControlName="brandId">
+            @for (b of brands; track b.id) {
+              <mat-option [value]="b.id">{{ b.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Модель</mat-label>
+          <input matInput formControlName="model" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Рік</mat-label>
+          <input matInput type="number" formControlName="year" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ціна, ₴</mat-label>
+          <input matInput type="number" formControlName="price" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Опис</mat-label>
+        <textarea matInput rows="5" formControlName="description"></textarea>
+      </mat-form-field>
+
+      <div class="upload">
+        <label class="upload-label">
+          <mat-icon>add_photo_alternate</mat-icon>
+          <span>Додати фото (можна кілька)</span>
+          <input type="file" accept="image/*" multiple hidden (change)="onFilesSelected($event)" />
+        </label>
+        @if (photos.length) {
+          <p class="files">{{ photos.length }} файл(ів) обрано</p>
+        }
+      </div>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="loading || form.invalid">
+        Опублікувати
+      </button>
+    </form>
+  </mat-card>
+</div>

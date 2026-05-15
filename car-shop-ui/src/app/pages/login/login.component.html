@@ -1,0 +1,20 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <h1>Вхід</h1>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Пароль</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+      <button mat-flat-button color="primary" class="full" [disabled]="loading || form.invalid">
+        Увійти
+      </button>
+    </form>
+    <p class="hint">Немає акаунта? <a routerLink="/register">Зареєструватись</a></p>
+    <p class="demo">Демо: admin&#64;carshop.com / Admin123!</p>
+  </mat-card>
+</div>

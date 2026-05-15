@@ -1,0 +1,13 @@
+<mat-card class="car-card">
+  <div class="image-wrap">
+    <img [src]="imageUrl()" [alt]="car.brand + ' ' + car.model" loading="lazy" />
+  </div>
+  <mat-card-content>
+    <h3>{{ car.brand }} {{ car.model }}</h3>
+    <p class="meta">{{ car.year }} р.</p>
+    <p class="price">{{ car.price | currency: 'UAH' : 'symbol-narrow' : '1.0-0' }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <a mat-flat-button color="primary" [routerLink]="['/cars', car.id]">Деталі</a>
+  </mat-card-actions>
+</mat-card>

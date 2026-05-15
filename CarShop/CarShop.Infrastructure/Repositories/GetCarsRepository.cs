@@ -21,6 +21,9 @@ public class GetCarsRepository : IGetCarsRepository
         if (q.BrandId.HasValue) query = query.Where(c => c.BrandId == q.BrandId.Value);
         if (q.YearFrom.HasValue) query = query.Where(c => c.Year >= q.YearFrom.Value);
         if (q.YearTo.HasValue) query = query.Where(c => c.Year <= q.YearTo.Value);
+        if (q.PriceFrom.HasValue) query = query.Where(c => c.Price >= q.PriceFrom.Value);
+        if (q.PriceTo.HasValue) query = query.Where(c => c.Price <= q.PriceTo.Value);
+        if (!string.IsNullOrEmpty(q.OwnerId)) query = query.Where(c => c.OwnerId == q.OwnerId);
 
         query = q.Sort switch
         {

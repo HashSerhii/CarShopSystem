@@ -1,0 +1,87 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 0 16px;
+  gap: 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: white;
+  margin-right: 16px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  a.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+}
+
+.user {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin: 0 8px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  background: #ff9800;
+  color: #1a2332;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-right: 8px;
+}
+
+.logout {
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+main {
+  min-height: calc(100vh - 128px);
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #5c6b7a;
+  font-size: 0.85rem;
+  border-top: 1px solid #e2e8f0;
+  background: white;
+}
+
+@media (max-width: 768px) {
+  .nav a span:not(mat-icon) {
+    display: none;
+  }
+
+  .user {
+    display: none;
+  }
+}

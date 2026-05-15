@@ -1,0 +1,41 @@
+<mat-toolbar class="toolbar" color="primary">
+  <a routerLink="/" class="brand">
+    <mat-icon>directions_car</mat-icon>
+    <span>CarShop</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <nav class="nav">
+    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      Каталог
+    </a>
+    @if (auth.isLoggedIn()) {
+      <a mat-button routerLink="/sell" routerLinkActive="active">Продати</a>
+      <a mat-button routerLink="/my-cars" routerLinkActive="active">Мої авто</a>
+      <a mat-button routerLink="/favorites" routerLinkActive="active">
+        <mat-icon>favorite</mat-icon>
+        Обране
+      </a>
+    }
+  </nav>
+
+  @if (auth.isLoggedIn()) {
+    <span class="user">{{ auth.email() }}</span>
+    @if (auth.isAdmin()) {
+      <span class="badge">Admin</span>
+    }
+    <button mat-stroked-button class="logout" (click)="auth.logout()">Вийти</button>
+  } @else {
+    <a mat-button routerLink="/login">Увійти</a>
+    <a mat-flat-button color="accent" routerLink="/register">Реєстрація</a>
+  }
+</mat-toolbar>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="footer">
+  <span>CarShop — онлайн-оголошення вживаних автомобілів</span>
+</footer>

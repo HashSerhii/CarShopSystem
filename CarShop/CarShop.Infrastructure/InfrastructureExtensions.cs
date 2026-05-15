@@ -29,6 +29,7 @@ public static class InfrastructureExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IGetCarsRepository, GetCarsRepository>();
+        services.AddScoped<IGetBrandsRepository, BrandsRepository>();
         services.AddScoped<ICarPhotoRepository, CarPhotoRepository>();
         services.AddScoped<IAddFavoriteRepository, FavoritesRepository>();
         services.AddScoped<IGetFavoritesRepository, FavoritesRepository>();
