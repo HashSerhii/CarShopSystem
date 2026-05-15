@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarShop.Infrastructure.Repositories;
 
-public class FavoritesRepository(AppDbContext db) : IAddFavoriteRepository, IGetFavoritesRepository
+public class FavoritesRepository(AppDbContext db)
+    : IAddFavoriteRepository, IGetFavoritesRepository, IRemoveFavoriteRepository
 {
 	public async Task AddFavoriteAsync(string userId, int carId, CancellationToken ct)
 	{
@@ -34,5 +35,21 @@ public class FavoritesRepository(AppDbContext db) : IAddFavoriteRepository, IGet
 			.ToListAsync(ct);
 
 		return new PagedResult<FavoriteModel>(items, total, page, pageSize);
+	}
+
+	public async Task<bool> RemoveFavoriteAsync(string userId, int carId, CancellationToken ct)
+	{
+		var favorite = await db.Set<FavoriteCar>()
+			.FirstOrDefaultAsync(x => x.UserId == userId && x.CarId == carId, ct);
+
+		if (favorite is null)
+		{
+			return false;
+		}
+
+		db.Set<FavoriteCar>().Remove(favorite);
+		await db.SaveChangesAsync(ct);
+
+		return true;
 	}
 } 

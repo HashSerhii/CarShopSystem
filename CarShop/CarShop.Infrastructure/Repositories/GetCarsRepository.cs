@@ -63,7 +63,8 @@ public class GetCarsRepository : IGetCarsRepository
                 c.Price,
                 c.Description,
                 c.Photos.Select(p => p.Url).FirstOrDefault(),
-                c.Photos.Select(p => p.Url).ToList()
+                c.Photos.Select(p => p.Url).ToList(),
+                c.Owner.PhoneNumber
             ))
             .FirstOrDefaultAsync(cancellationToken);
         return car;
@@ -93,5 +94,14 @@ public class GetCarsRepository : IGetCarsRepository
         await _db.SaveChangesAsync(cancellationToken);
 
         return true;
+    }
+
+    public async Task<string?> GetCarOwnerIdAsync(int carId, CancellationToken cancellationToken)
+    {
+        return await _db.Cars
+            .AsNoTracking()
+            .Where(c => c.Id == carId)
+            .Select(c => c.OwnerId)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

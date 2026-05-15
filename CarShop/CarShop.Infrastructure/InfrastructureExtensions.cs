@@ -9,9 +9,6 @@ using CarShop.Application;
 using CarShop.Application.Mediator;
 using CarShop.Application.Mediator.Interfaces;
 using CarShop.Infrastructure.Authentication;
-using CarShop.Application.DTOs;
-using CarShop.Application.Queries;
-using CarShop.Application.Commands;
 using CarShop.Application.Services;
 
 namespace CarShop.Infrastructure;
@@ -20,7 +17,6 @@ public static class InfrastructureExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("CarShopDbConnection")));
         
@@ -33,20 +29,15 @@ public static class InfrastructureExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IGetCarsRepository, GetCarsRepository>();
+        services.AddScoped<ICarPhotoRepository, CarPhotoRepository>();
         services.AddScoped<IAddFavoriteRepository, FavoritesRepository>();
         services.AddScoped<IGetFavoritesRepository, FavoritesRepository>();
-
+        services.AddScoped<IRemoveFavoriteRepository, FavoritesRepository>();
 
         services.AddSingleton<IMediator, Mediator>();
-        
-        services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>>, GetCarsQueryHandler>();
-        services.AddScoped<ICommandHandler<AddFavoriteCommand>, AddFavoriteCommandHandler>();
-        services.AddScoped<IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteModel>>, GetFavoritesQueryHandler>();
-        services.AddScoped<IQueryHandler<GetCarByIdQuery, CarDetailModel?>, GetCarByIdQueryHandler>();
-        services.AddScoped<ICommandHandler<CreateCarCommand, int>, CreateCarCommandHandler>();
         services.AddHttpContextAccessor();
         services.AddScoped<IUserContext, UserContext>();
-        services.AddScoped<ICommandHandler<DeleteCarCommand, bool>, DeleteCarCommandHandler>();
+
         return services;
     }
 }

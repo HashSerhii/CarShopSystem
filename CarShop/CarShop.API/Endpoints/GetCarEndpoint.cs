@@ -13,7 +13,7 @@ public static class CarEndpoints
 {
     public static IEndpointRouteBuilder MapCarEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Cars, async (
+        app.MapGet(ApiRoutes.Cars.Base, async (
                 [AsParameters] GetCarsRequest request,
                 IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>> handler,
                 CancellationToken ct) =>
@@ -25,7 +25,7 @@ public static class CarEndpoints
             .WithSummary("Returns a list of cars with filters, sorting")
             .Produces<PagedResult<CarListItemModel>>(StatusCodes.Status200OK);
 
-        app.MapGet("/api/cars/{id:int}", async (
+        app.MapGet(ApiRoutes.Cars.ById, async (
                 [AsParameters] GetCarByIdRequest request,
                 IMediator mediator,
                 CancellationToken ct) =>
@@ -40,7 +40,7 @@ public static class CarEndpoints
             .WithName("GetCarById")
             .WithSummary("Get car details by ID");
 
-        app.MapPost("/api/cars", async (
+        app.MapPost(ApiRoutes.Cars.Base, async (
                 [AsParameters] CreateCarRequest request,
                 IMediator mediator,
                 CancellationToken ct) =>
@@ -48,12 +48,28 @@ public static class CarEndpoints
                 var command = request.ToCommand();
                 var newId = await mediator.ExecuteCommand<CreateCarCommand, int>(command, ct);
 
-                return Results.Created($"/api/cars/{newId}", newId);
+                return Results.Created($"{ApiRoutes.Cars.Base}/{newId}", newId);
             })
+            .RequireAuthorization()
             .WithName("CreateCar")
             .WithSummary("Create a new car");
 
-        app.MapDelete("/api/cars/{id:int}", async (
+        app.MapPost(ApiRoutes.Cars.Photos, async (
+                int id,
+                IFormFileCollection files,
+                IMediator mediator,
+                CancellationToken ct) =>
+            {
+                var command = new UploadCarPhotoCommand(id, files);
+                await mediator.ExecuteCommand(command, ct);
+                return Results.Ok();
+            })
+            .RequireAuthorization()
+            .DisableAntiforgery()
+            .WithName("UploadCarPhotos")
+            .WithSummary("Upload photos for a car");
+
+        app.MapDelete(ApiRoutes.Cars.ById, async (
                 [AsParameters] DeleteCarRequest request,
                 IMediator mediator,
                 CancellationToken ct) =>
@@ -66,6 +82,7 @@ public static class CarEndpoints
                     ? Results.NoContent()
                     : Results.NotFound();
             })
+            .RequireAuthorization()
             .WithName("DeleteCar")
             .WithSummary("Deletes a car by ID");
 
