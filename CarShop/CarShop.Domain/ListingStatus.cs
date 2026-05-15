@@ -1,0 +1,8 @@
+namespace CarShop.Domain;
+
+public enum ListingStatus
+{
+    Pending = 0,
+    Approved = 1,
+    Rejected = 2
+}

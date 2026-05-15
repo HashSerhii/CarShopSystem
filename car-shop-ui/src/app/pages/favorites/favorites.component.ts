@@ -52,6 +52,8 @@ export class FavoritesComponent implements OnInit {
       model: f.model,
       year: f.year,
       price: f.price,
+      mileage: 0,
+      status: 'Approved',
       primaryPhotoUrl: f.mainPhotoUrl,
     };
   }

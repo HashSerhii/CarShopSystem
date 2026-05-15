@@ -8,10 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { BrandsService } from '../../core/services/brands.service';
 import { CarsService } from '../../core/services/cars.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Brand } from '../../core/models/api.models';
 
 @Component({
@@ -36,6 +36,7 @@ export class SellComponent implements OnInit {
   private readonly carsService = inject(CarsService);
   private readonly router = inject(Router);
   private readonly snack = inject(MatSnackBar);
+  readonly auth = inject(AuthService);
 
   brands: Brand[] = [];
   photos: File[] = [];
@@ -45,6 +46,7 @@ export class SellComponent implements OnInit {
     brandId: [null as number | null, Validators.required],
     model: ['', Validators.required],
     year: [new Date().getFullYear(), [Validators.required, Validators.min(1990)]],
+    mileage: [null as number | null, [Validators.required, Validators.min(0)]],
     description: ['', Validators.required],
     price: [null as number | null, [Validators.required, Validators.min(1)]],
   });
@@ -68,25 +70,63 @@ export class SellComponent implements OnInit {
         brandId: v.brandId!,
         model: v.model!,
         year: v.year!,
+        mileage: v.mileage!,
         description: v.description!,
         price: v.price!,
       })
-      .pipe(
-        switchMap((carId) =>
-          this.photos.length
-            ? this.carsService.uploadPhotos(carId, this.photos)
-            : of(null)
-        )
-      )
       .subscribe({
-        next: () => {
-          this.snack.open('Оголошення опубліковано!', 'OK', { duration: 3000 });
-          void this.router.navigate(['/my-cars']);
-        },
-        error: () => {
-          this.loading = false;
-          this.snack.open('Помилка публікації', 'OK', { duration: 4000 });
-        },
+        next: (carId) => this.uploadPhotosAndFinish(carId),
+        error: (err) => this.showError(err),
       });
+  }
+
+  private uploadPhotosAndFinish(carId: number): void {
+    if (!this.photos.length) {
+      this.finishSuccess();
+      return;
+    }
+
+    this.carsService.uploadPhotos(carId, this.photos).subscribe({
+      next: () => this.finishSuccess(),
+      error: () => {
+        this.loading = false;
+        this.snack.open(
+          'Заявку створено, але фото не завантажилось. Спробуйте ще раз у «Мої авто».',
+          'OK',
+          { duration: 5000 }
+        );
+        void this.router.navigate(['/my-cars']);
+      },
+    });
+  }
+
+  private finishSuccess(): void {
+    this.loading = false;
+    const msg = this.auth.isAdmin()
+      ? 'Оголошення опубліковано!'
+      : 'Заявку надіслано на модерацію. Після схвалення адміном вона зʼявиться в каталозі.';
+    this.snack.open(msg, 'OK', { duration: 4500 });
+    void this.router.navigate(['/my-cars']);
+  }
+
+  private showError(err: unknown): void {
+    this.loading = false;
+    let message = 'Помилка збереження';
+
+    if (err instanceof HttpErrorResponse) {
+      if (err.status === 401) {
+        message = 'Увійдіть знову в акаунт';
+      } else if (err.status === 0) {
+        message = 'API недоступний. Запустіть CarShop.API у Rider';
+      } else if (typeof err.error === 'string') {
+        message = err.error;
+      } else if (err.error?.title) {
+        message = err.error.title;
+      } else if (err.error?.detail) {
+        message = err.error.detail;
+      }
+    }
+
+    this.snack.open(message, 'OK', { duration: 5000 });
   }
 }

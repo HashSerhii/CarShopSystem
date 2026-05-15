@@ -9,4 +9,8 @@ export class BrandsService {
   getAll() {
     return this.http.get<Brand[]>('/api/brands');
   }
+
+  create(name: string) {
+    return this.http.post<Brand>('/api/brands', { name });
+  }
 }

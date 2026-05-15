@@ -13,9 +13,21 @@
 }
 
 .image-wrap {
+  position: relative;
   aspect-ratio: 16 / 10;
   background: #e8edf2;
   overflow: hidden;
+
+  .status {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95);
+  }
 
   img {
     width: 100%;

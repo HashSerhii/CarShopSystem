@@ -11,8 +11,13 @@
       Каталог
     </a>
     @if (auth.isLoggedIn()) {
-      <a mat-button routerLink="/sell" routerLinkActive="active">Продати</a>
+      <a mat-button [routerLink]="auth.isAdmin() ? '/sell' : '/submit-listing'" routerLinkActive="active">
+        {{ auth.isAdmin() ? 'Продати' : 'Подати заявку' }}
+      </a>
       <a mat-button routerLink="/my-cars" routerLinkActive="active">Мої авто</a>
+      @if (auth.isAdmin()) {
+        <a mat-button routerLink="/admin/moderation" routerLinkActive="active">Модерація</a>
+      }
       <a mat-button routerLink="/favorites" routerLinkActive="active">
         <mat-icon>favorite</mat-icon>
         Обране
@@ -21,14 +26,49 @@
   </nav>
 
   @if (auth.isLoggedIn()) {
-    <span class="user">{{ auth.email() }}</span>
-    @if (auth.isAdmin()) {
-      <span class="badge">Admin</span>
-    }
-    <button mat-stroked-button class="logout" (click)="auth.logout()">Вийти</button>
+    <button
+      mat-button
+      class="user-menu-trigger"
+      [matMenuTriggerFor]="userMenu"
+      [attr.aria-label]="'Акаунт: ' + auth.email()"
+      [title]="auth.email() ?? ''"
+    >
+      <mat-icon>account_circle</mat-icon>
+      <span class="user-email">{{ auth.email() }}</span>
+      @if (auth.isAdmin()) {
+        <span class="badge">Admin</span>
+      }
+      <mat-icon class="chevron">expand_more</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu" xPosition="before">
+      <div class="menu-header" mat-menu-item disabled>
+        <strong>{{ auth.email() }}</strong>
+        @if (auth.isAdmin()) {
+          <small>Адміністратор</small>
+        } @else {
+          <small>Користувач</small>
+        }
+      </div>
+      <button mat-menu-item routerLink="/my-cars">
+        <mat-icon>garage</mat-icon>
+        <span>Мої оголошення</span>
+      </button>
+      @if (auth.isAdmin()) {
+        <button mat-menu-item routerLink="/admin/moderation">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Модерація</span>
+        </button>
+      }
+      <mat-divider />
+      <button mat-menu-item (click)="auth.logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Вийти</span>
+      </button>
+    </mat-menu>
   } @else {
-    <a mat-button routerLink="/login">Увійти</a>
-    <a mat-flat-button color="accent" routerLink="/register">Реєстрація</a>
+    <a mat-button class="auth-link" routerLink="/login">Увійти</a>
+    <a mat-button class="auth-link" routerLink="/register">Реєстрація</a>
   }
 </mat-toolbar>
 

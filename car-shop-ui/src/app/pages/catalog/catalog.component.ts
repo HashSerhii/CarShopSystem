@@ -40,10 +40,13 @@ export class CatalogComponent implements OnInit {
 
   readonly filters = this.fb.group({
     brandId: [null as number | null],
+    model: [''],
     yearFrom: [null as number | null],
     yearTo: [null as number | null],
     priceFrom: [null as number | null],
     priceTo: [null as number | null],
+    mileageFrom: [null as number | null],
+    mileageTo: [null as number | null],
     sort: ['price_asc'],
     page: [1],
   });
@@ -63,10 +66,13 @@ export class CatalogComponent implements OnInit {
     this.carsService
       .getCars({
         brandId: v.brandId,
+        model: v.model?.trim() || null,
         yearFrom: v.yearFrom,
         yearTo: v.yearTo,
         priceFrom: v.priceFrom,
         priceTo: v.priceTo,
+        mileageFrom: v.mileageFrom,
+        mileageTo: v.mileageTo,
         sort: v.sort ?? 'price_asc',
         page: v.page ?? 1,
         pageSize: 12,
@@ -84,10 +90,13 @@ export class CatalogComponent implements OnInit {
   reset(): void {
     this.filters.reset({
       brandId: null,
+      model: '',
       yearFrom: null,
       yearTo: null,
       priceFrom: null,
       priceTo: null,
+      mileageFrom: null,
+      mileageTo: null,
       sort: 'price_asc',
       page: 1,
     });

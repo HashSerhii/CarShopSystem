@@ -21,7 +21,13 @@ public class CarEntityConfiguration: IEntityTypeConfiguration<Car>
             .HasColumnType("decimal(18,2)"); 
 
         builder.Property(c => c.Description)
-            .HasMaxLength(500); 
+            .HasMaxLength(500);
+
+        builder.Property(c => c.Mileage)
+            .IsRequired();
+
+        builder.Property(c => c.Status)
+            .HasConversion<int>();
 
         builder.HasOne(c => c.Brand)
             .WithMany(b => b.Cars)

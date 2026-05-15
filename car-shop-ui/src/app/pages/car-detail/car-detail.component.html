@@ -4,6 +4,12 @@
   } @else if (car) {
     <a class="back" routerLink="/">← Назад до каталогу</a>
 
+    @if (car.status !== 'Approved') {
+      <p class="status-banner" [class]="statusClass(car.status)">
+        {{ statusLabel(car.status) }}
+      </p>
+    }
+
     <div class="layout">
       <div class="gallery">
         <img class="hero" [src]="mainImage()" [alt]="car.brand + ' ' + car.model" />
@@ -18,16 +24,21 @@
 
       <div class="info">
         <h1>{{ car.brand }} {{ car.model }}</h1>
-        <p class="year">{{ car.year }} рік</p>
+        <p class="year">{{ car.year }} рік · {{ car.mileage | number }} км</p>
         <p class="price">{{ car.price | currency: 'UAH' : 'symbol-narrow' : '1.0-0' }}</p>
 
         <p class="description">{{ car.description || 'Без опису' }}</p>
 
         @if (car.ownerPhoneNumber) {
-          <button mat-flat-button color="primary" (click)="callSeller()">
+          <button mat-flat-button color="primary" class="phone-btn" (click)="callSeller()">
             <mat-icon>phone</mat-icon>
             {{ car.ownerPhoneNumber }}
           </button>
+        } @else {
+          <p class="no-phone">
+            <mat-icon>info</mat-icon>
+            Телефон продавця не вказано.
+          </p>
         }
 
         <div class="actions">

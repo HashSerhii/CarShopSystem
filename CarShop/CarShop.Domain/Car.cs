@@ -7,7 +7,9 @@ public class Car
     public string Model { get; set; } = string.Empty;
     public int Year { get; set; }
     public decimal Price { get; set; }
+    public int Mileage { get; set; }
     public string Description { get; set; } = string.Empty;
+    public ListingStatus Status { get; set; } = ListingStatus.Pending;
     public string OwnerId { get; set; } = string.Empty;
 
     

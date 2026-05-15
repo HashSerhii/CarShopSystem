@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { statusClass, statusLabel } from '../../core/utils/listing-status';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -17,6 +18,7 @@ import { resolveImageUrl } from '../../core/utils/image-url';
   imports: [
     RouterLink,
     CurrencyPipe,
+    DecimalPipe,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -36,6 +38,9 @@ export class CarDetailComponent implements OnInit {
   car: CarDetail | null = null;
   loading = true;
   favoriteLoading = false;
+
+  readonly statusLabel = statusLabel;
+  readonly statusClass = statusClass;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));

@@ -1,10 +1,13 @@
 <mat-card class="car-card">
   <div class="image-wrap">
     <img [src]="imageUrl()" [alt]="car.brand + ' ' + car.model" loading="lazy" />
+    @if (showStatus()) {
+      <span class="status" [class]="statusClass(car.status)">{{ statusLabel(car.status) }}</span>
+    }
   </div>
   <mat-card-content>
     <h3>{{ car.brand }} {{ car.model }}</h3>
-    <p class="meta">{{ car.year }} р.</p>
+    <p class="meta">{{ car.year }} р. · {{ car.mileage | number }} км</p>
     <p class="price">{{ car.price | currency: 'UAH' : 'symbol-narrow' : '1.0-0' }}</p>
   </mat-card-content>
   <mat-card-actions>
