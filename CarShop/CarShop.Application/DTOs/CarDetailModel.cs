@@ -6,6 +6,8 @@ public sealed record CarDetailModel(
     string Model,
     int Year,
     decimal Price,
+    int Mileage,
+    string Status,
     string? Description,
     string? MainPhotoUrl,
     List<string>? AllPhotoUrls,

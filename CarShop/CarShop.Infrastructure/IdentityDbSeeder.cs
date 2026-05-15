@@ -27,6 +27,12 @@ public static class IdentityDbSeeder
         var admin = await userManager.FindByEmailAsync(DefaultAdminEmail);
         if (admin is not null)
         {
+            if (string.IsNullOrWhiteSpace(admin.PhoneNumber))
+            {
+                admin.PhoneNumber = "+380501112233";
+                await userManager.UpdateAsync(admin);
+            }
+
             return;
         }
 
@@ -34,7 +40,8 @@ public static class IdentityDbSeeder
         {
             UserName = DefaultAdminEmail,
             Email = DefaultAdminEmail,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            PhoneNumber = "+380501112233"
         };
 
         var createResult = await userManager.CreateAsync(admin, DefaultAdminPassword);

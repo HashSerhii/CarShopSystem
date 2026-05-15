@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -35,9 +36,23 @@ export const routes: Routes = [
       },
       {
         path: 'sell',
+        canActivate: [authGuard, adminGuard],
+        loadComponent: () =>
+          import('./pages/sell/sell.component').then((m) => m.SellComponent),
+      },
+      {
+        path: 'submit-listing',
         canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/sell/sell.component').then((m) => m.SellComponent),
+      },
+      {
+        path: 'admin/moderation',
+        canActivate: [authGuard, adminGuard],
+        loadComponent: () =>
+          import('./pages/admin-moderation/admin-moderation.component').then(
+            (m) => m.AdminModerationComponent
+          ),
       },
       {
         path: 'my-cars',

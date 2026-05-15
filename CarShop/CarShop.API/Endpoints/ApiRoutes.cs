@@ -9,6 +9,9 @@ public static class ApiRoutes
         public const string Base = ApiBase + "/cars";
         public const string ById = ApiBase + "/cars/{id:int}";
         public const string Photos = ApiBase + "/cars/{id:int}/photos";
+        public const string Pending = ApiBase + "/cars/pending";
+        public const string Approve = ApiBase + "/cars/{id:int}/approve";
+        public const string Reject = ApiBase + "/cars/{id:int}/reject";
     }
 
     public static class Favorites

@@ -1,0 +1,57 @@
+<div class="page moderation">
+  <h1 class="page-title">Модерація оголошень</h1>
+  <p class="page-subtitle">Заявки від користувачів, що очікують схвалення</p>
+
+  <mat-card class="brands-card">
+    <h2>Марки автомобілів</h2>
+    <p class="hint">Користувач обирає марку з цього списку при подачі заявки.</p>
+    <form class="brand-form" [formGroup]="brandForm" (ngSubmit)="addBrand()">
+      <mat-form-field appearance="outline">
+        <mat-label>Нова марка</mat-label>
+        <input matInput formControlName="name" placeholder="Напр. Renault" />
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit" [disabled]="brandForm.invalid">
+        Додати марку
+      </button>
+    </form>
+    @if (brands.length) {
+      <div class="brand-chips">
+        @for (b of brands; track b.id) {
+          <span>{{ b.name }}</span>
+        }
+      </div>
+    }
+  </mat-card>
+
+  @if (loading) {
+    <div class="loading"><mat-spinner diameter="48" /></div>
+  } @else if (cars.length === 0) {
+    <div class="empty-state">
+      <mat-icon>task_alt</mat-icon>
+      <p>Немає заявок на модерацію.</p>
+    </div>
+  } @else {
+    <div class="list">
+      @for (car of cars; track car.id) {
+        <div class="item">
+          <app-car-card [car]="car" [showStatusBadge]="true" />
+          <div class="actions">
+            <button mat-flat-button color="primary" (click)="approve(car.id)">
+              <mat-icon>check</mat-icon>
+              Схвалити
+            </button>
+            <button mat-stroked-button color="warn" (click)="reject(car.id)">
+              <mat-icon>close</mat-icon>
+              Відхилити
+            </button>
+            <button mat-stroked-button (click)="remove(car.id)">
+              <mat-icon>delete</mat-icon>
+              Видалити
+            </button>
+            <a mat-button [routerLink]="['/cars', car.id]">Переглянути</a>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

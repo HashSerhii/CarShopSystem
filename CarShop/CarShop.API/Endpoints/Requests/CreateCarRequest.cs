@@ -6,10 +6,11 @@ public sealed record CreateCarRequest(
     int BrandId,
     string Model,
     int Year,
+    int Mileage,
     string Description,
     decimal Price
 )
 {
     public CreateCarCommand ToCommand() =>
-        new CreateCarCommand(BrandId, Model, Year, Description, Price);
+        new(BrandId, Model, Year, Mileage, Description, Price);
 }

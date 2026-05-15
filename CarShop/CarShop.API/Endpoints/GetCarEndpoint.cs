@@ -1,3 +1,4 @@
+using CarShop.Application.Constants;
 using CarShop.Application.DTOs;              
 using CarShop.Application.Mediator.Interfaces; 
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using CarShop.API.Endpoints;
 using CarShop.Application.Commands;
 using CarShop.Application.Queries;
 using CarShop.Application.Services;
+using CarShop.Domain;
 
 namespace CarShop.API.Endpoints;
 
@@ -52,6 +54,35 @@ public static class CarEndpoints
             .WithName("GetMyCars")
             .WithSummary("Returns cars listed by the current user");
 
+        app.MapGet(ApiRoutes.Cars.Pending, async (
+                int? page,
+                int? pageSize,
+                IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>> handler,
+                IUserContext userContext,
+                CancellationToken ct) =>
+            {
+                if (!userContext.IsInRole(Roles.Admin))
+                {
+                    return Results.Forbid();
+                }
+
+                var resolvedPage = page is null or <= 0 ? 1 : page.Value;
+                var resolvedPageSize = pageSize is null or <= 0 ? 20 : Math.Min(pageSize.Value, 100);
+
+                var query = new GetCarsQuery(
+                    null, null, null, null, null, null, null, null, null,
+                    ListingStatus.Pending,
+                    OnlyApproved: false,
+                    resolvedPage,
+                    resolvedPageSize);
+
+                var result = await handler.ExecuteAsync(query, ct);
+                return Results.Ok(result);
+            })
+            .RequireAuthorization()
+            .WithName("GetPendingCars")
+            .WithSummary("Returns listings awaiting admin approval");
+
         app.MapGet(ApiRoutes.Cars.ById, async (
                 [AsParameters] GetCarByIdRequest request,
                 IMediator mediator,
@@ -68,14 +99,16 @@ public static class CarEndpoints
             .WithSummary("Get car details by ID");
 
         app.MapPost(ApiRoutes.Cars.Base, async (
-                [AsParameters] CreateCarRequest request,
+                CreateCarRequest request,
                 IMediator mediator,
                 CancellationToken ct) =>
             {
                 var command = request.ToCommand();
                 var newId = await mediator.ExecuteCommand<CreateCarCommand, int>(command, ct);
 
-                return Results.Created($"{ApiRoutes.Cars.Base}/{newId}", newId);
+                return Results.Created(
+                    $"{ApiRoutes.Cars.Base}/{newId}",
+                    new CreateCarResponse(newId));
             })
             .RequireAuthorization()
             .WithName("CreateCar")
@@ -112,6 +145,30 @@ public static class CarEndpoints
             .RequireAuthorization()
             .WithName("DeleteCar")
             .WithSummary("Deletes a car by ID");
+
+        app.MapPost(ApiRoutes.Cars.Approve, async (
+                int id,
+                ICommandHandler<ApproveCarCommand, bool> handler,
+                CancellationToken ct) =>
+            {
+                var ok = await handler.ExecuteAsync(new ApproveCarCommand(id), ct);
+                return ok ? Results.NoContent() : Results.NotFound();
+            })
+            .RequireAuthorization()
+            .WithName("ApproveCar")
+            .WithSummary("Approve a pending listing");
+
+        app.MapPost(ApiRoutes.Cars.Reject, async (
+                int id,
+                ICommandHandler<RejectCarCommand, bool> handler,
+                CancellationToken ct) =>
+            {
+                var ok = await handler.ExecuteAsync(new RejectCarCommand(id), ct);
+                return ok ? Results.NoContent() : Results.NotFound();
+            })
+            .RequireAuthorization()
+            .WithName("RejectCar")
+            .WithSummary("Reject a pending listing");
 
     return app;
     }

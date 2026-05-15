@@ -8,12 +8,16 @@ export interface Brand {
   name: string;
 }
 
+export type ListingStatus = 'Pending' | 'Approved' | 'Rejected';
+
 export interface CarListItem {
   id: number;
   brand: string;
   model: string;
   year: number;
   price: number;
+  mileage: number;
+  status: ListingStatus;
   primaryPhotoUrl: string | null;
 }
 
@@ -23,6 +27,8 @@ export interface CarDetail {
   model: string;
   year: number;
   price: number;
+  mileage: number;
+  status: ListingStatus;
   description: string | null;
   mainPhotoUrl: string | null;
   allPhotoUrls: string[] | null;
@@ -51,6 +57,9 @@ export interface CarsQuery {
   yearTo?: number | null;
   priceFrom?: number | null;
   priceTo?: number | null;
+  mileageFrom?: number | null;
+  mileageTo?: number | null;
+  model?: string | null;
   page?: number;
   pageSize?: number;
   sort?: string;
@@ -60,6 +69,7 @@ export interface CreateCarPayload {
   brandId: number;
   model: string;
   year: number;
+  mileage: number;
   description: string;
   price: number;
 }

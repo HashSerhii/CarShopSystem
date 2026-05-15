@@ -8,13 +8,13 @@
     <div class="empty-state">
       <mat-icon>directions_car</mat-icon>
       <p>У вас ще немає оголошень.</p>
-      <a mat-flat-button color="primary" routerLink="/sell">Додати авто</a>
+      <a mat-flat-button color="primary" routerLink="/submit-listing">Подати заявку</a>
     </div>
   } @else {
     <div class="car-grid">
       @for (car of cars; track car.id) {
         <div class="card-wrap">
-          <app-car-card [car]="car" />
+          <app-car-card [car]="car" [showStatusBadge]="true" />
           <button mat-stroked-button color="warn" class="delete-btn" (click)="delete(car.id, $event)">
             <mat-icon>delete</mat-icon>
             Видалити

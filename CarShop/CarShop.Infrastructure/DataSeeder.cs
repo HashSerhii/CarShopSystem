@@ -17,10 +17,18 @@ public static class DataSeeder
         using var scope = serviceProvider.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        if (!await db.Brands.AnyAsync())
+        var existing = await db.Brands
+            .Select(b => b.Name.ToLower())
+            .ToListAsync();
+
+        var toAdd = DefaultBrands
+            .Where(name => !existing.Contains(name.ToLower()))
+            .Select(name => new Brand { Name = name })
+            .ToList();
+
+        if (toAdd.Count > 0)
         {
-            await db.Brands.AddRangeAsync(
-                DefaultBrands.Select(name => new Brand { Name = name }));
+            await db.Brands.AddRangeAsync(toAdd);
             await db.SaveChangesAsync();
         }
     }

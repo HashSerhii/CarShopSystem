@@ -1,6 +1,6 @@
 <div class="page catalog">
   <h1 class="page-title">Каталог автомобілів</h1>
-  <p class="page-subtitle">Знайдіть вживане авто за маркою, роком та ціною</p>
+  <p class="page-subtitle">Знайдіть вживане авто за маркою, моделлю, роком, ціною та пробігом</p>
 
   <form class="filters" [formGroup]="filters">
     <mat-form-field appearance="outline">
@@ -14,6 +14,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
+      <mat-label>Модель</mat-label>
+      <input matInput formControlName="model" placeholder="Напр. M5" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Рік від</mat-label>
       <input matInput type="number" formControlName="yearFrom" />
     </mat-form-field>
@@ -24,13 +29,23 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Ціна від</mat-label>
+      <mat-label>Ціна від, ₴</mat-label>
       <input matInput type="number" formControlName="priceFrom" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Ціна до</mat-label>
+      <mat-label>Ціна до, ₴</mat-label>
       <input matInput type="number" formControlName="priceTo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Пробіг від, км</mat-label>
+      <input matInput type="number" formControlName="mileageFrom" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Пробіг до, км</mat-label>
+      <input matInput type="number" formControlName="mileageTo" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -40,6 +55,8 @@
         <mat-option value="price_desc">Ціна ↓</mat-option>
         <mat-option value="year_desc">Рік ↓</mat-option>
         <mat-option value="year_asc">Рік ↑</mat-option>
+        <mat-option value="mileage_asc">Пробіг ↑</mat-option>
+        <mat-option value="mileage_desc">Пробіг ↓</mat-option>
       </mat-select>
     </mat-form-field>
 
