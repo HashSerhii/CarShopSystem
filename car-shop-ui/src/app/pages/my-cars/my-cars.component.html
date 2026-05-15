@@ -1,0 +1,26 @@
+<div class="page">
+  <h1 class="page-title">Мої оголошення</h1>
+  <p class="page-subtitle">Автомобілі, які ви виставили на продаж</p>
+
+  @if (loading) {
+    <div class="loading"><mat-spinner /></div>
+  } @else if (cars.length === 0) {
+    <div class="empty-state">
+      <mat-icon>directions_car</mat-icon>
+      <p>У вас ще немає оголошень.</p>
+      <a mat-flat-button color="primary" routerLink="/sell">Додати авто</a>
+    </div>
+  } @else {
+    <div class="car-grid">
+      @for (car of cars; track car.id) {
+        <div class="card-wrap">
+          <app-car-card [car]="car" />
+          <button mat-stroked-button color="warn" class="delete-btn" (click)="delete(car.id, $event)">
+            <mat-icon>delete</mat-icon>
+            Видалити
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,26 @@
+<div class="page">
+  <h1 class="page-title">Обране</h1>
+  <p class="page-subtitle">Збережені оголошення</p>
+
+  @if (loading) {
+    <div class="loading"><mat-spinner /></div>
+  } @else if (items.length === 0) {
+    <div class="empty-state">
+      <mat-icon>favorite_border</mat-icon>
+      <p>Список обраного порожній.</p>
+      <a mat-flat-button color="primary" routerLink="/">Переглянути каталог</a>
+    </div>
+  } @else {
+    <div class="car-grid">
+      @for (f of items; track f.carId) {
+        <div class="card-wrap">
+          <app-car-card [car]="toCard(f)" />
+          <button mat-stroked-button class="remove-btn" (click)="remove(f.carId)">
+            <mat-icon>favorite</mat-icon>
+            Прибрати
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

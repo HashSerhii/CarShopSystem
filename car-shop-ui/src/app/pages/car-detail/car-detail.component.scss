@@ -1,0 +1,82 @@
+.detail .back {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 24px rgba(26, 35, 50, 0.08);
+}
+
+.gallery .hero {
+  width: 100%;
+  border-radius: 12px;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  background: #e8edf2;
+}
+
+.thumbs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  overflow-x: auto;
+
+  img {
+    width: 80px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+}
+
+.info h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+}
+
+.year {
+  color: #5c6b7a;
+  margin: 0 0 16px;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1565c0;
+  margin: 0 0 20px;
+}
+
+.description {
+  line-height: 1.6;
+  color: #3d4f5f;
+  margin-bottom: 24px;
+  white-space: pre-wrap;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 80px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

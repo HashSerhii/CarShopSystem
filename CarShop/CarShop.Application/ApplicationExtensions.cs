@@ -17,6 +17,7 @@ public static class ApplicationExtensions
         services.AddScoped<IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>>, GetCarsQueryHandler>();
         services.AddScoped<IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteModel>>, GetFavoritesQueryHandler>();
         services.AddScoped<IQueryHandler<GetCarByIdQuery, CarDetailModel?>, GetCarByIdQueryHandler>();
+        services.AddScoped<IQueryHandler<GetBrandsQuery, IReadOnlyList<BrandModel>>, GetBrandsQueryHandler>();
         services.AddScoped<ICommandHandler<AddFavoriteCommand>, AddFavoriteCommandHandler>();
         services.AddScoped<ICommandHandler<CreateCarCommand, int>, CreateCarCommandHandler>();
         services.AddScoped<ICommandHandler<DeleteCarCommand, bool>, DeleteCarCommandHandler>();

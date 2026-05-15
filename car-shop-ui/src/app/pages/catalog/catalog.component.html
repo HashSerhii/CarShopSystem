@@ -1,0 +1,75 @@
+<div class="page catalog">
+  <h1 class="page-title">Каталог автомобілів</h1>
+  <p class="page-subtitle">Знайдіть вживане авто за маркою, роком та ціною</p>
+
+  <form class="filters" [formGroup]="filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Марка</mat-label>
+      <mat-select formControlName="brandId">
+        <mat-option [value]="null">Усі</mat-option>
+        @for (b of brands; track b.id) {
+          <mat-option [value]="b.id">{{ b.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Рік від</mat-label>
+      <input matInput type="number" formControlName="yearFrom" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Рік до</mat-label>
+      <input matInput type="number" formControlName="yearTo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ціна від</mat-label>
+      <input matInput type="number" formControlName="priceFrom" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ціна до</mat-label>
+      <input matInput type="number" formControlName="priceTo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Сортування</mat-label>
+      <mat-select formControlName="sort">
+        <mat-option value="price_asc">Ціна ↑</mat-option>
+        <mat-option value="price_desc">Ціна ↓</mat-option>
+        <mat-option value="year_desc">Рік ↓</mat-option>
+        <mat-option value="year_asc">Рік ↑</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="reset()">Скинути</button>
+  </form>
+
+  @if (loading) {
+    <div class="loading">
+      <mat-spinner diameter="48" />
+    </div>
+  } @else if (cars.length === 0) {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p>Нічого не знайдено. Спробуйте змінити фільтри.</p>
+    </div>
+  } @else {
+    <div class="car-grid">
+      @for (car of cars; track car.id) {
+        <app-car-card [car]="car" />
+      }
+    </div>
+
+    <div class="pager">
+      <button mat-stroked-button (click)="prevPage()" [disabled]="(filters.value.page ?? 1) <= 1">
+        Назад
+      </button>
+      <span>Сторінка {{ filters.value.page ?? 1 }} · всього {{ total }}</span>
+      <button mat-stroked-button (click)="nextPage()" [disabled]="(filters.value.page ?? 1) * 12 >= total">
+        Далі
+      </button>
+    </div>
+  }
+</div>

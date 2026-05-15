@@ -6,6 +6,7 @@ using CarShop.API.Endpoints.Requests;
 using CarShop.API.Endpoints;
 using CarShop.Application.Commands;
 using CarShop.Application.Queries;
+using CarShop.Application.Services;
 
 namespace CarShop.API.Endpoints;
 
@@ -16,14 +17,40 @@ public static class CarEndpoints
         app.MapGet(ApiRoutes.Cars.Base, async (
                 [AsParameters] GetCarsRequest request,
                 IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>> handler,
+                IUserContext userContext,
                 CancellationToken ct) =>
             {
-                var result = await handler.ExecuteAsync(request.ToQuery(), ct);
+                string? ownerId = request.Mine ? userContext.GetCurrentUserId() : null;
+                if (request.Mine && string.IsNullOrEmpty(ownerId))
+                {
+                    return Results.Unauthorized();
+                }
+
+                var result = await handler.ExecuteAsync(request.ToQuery(ownerId), ct);
                 return Results.Ok(result);
             })
             .WithName("GetCars")
             .WithSummary("Returns a list of cars with filters, sorting")
             .Produces<PagedResult<CarListItemModel>>(StatusCodes.Status200OK);
+
+        app.MapGet($"{ApiRoutes.Cars.Base}/mine", async (
+                [AsParameters] GetCarsRequest request,
+                IQueryHandler<GetCarsQuery, PagedResult<CarListItemModel>> handler,
+                IUserContext userContext,
+                CancellationToken ct) =>
+            {
+                var ownerId = userContext.GetCurrentUserId();
+                if (string.IsNullOrEmpty(ownerId))
+                {
+                    return Results.Unauthorized();
+                }
+
+                var result = await handler.ExecuteAsync(request.ToQuery(ownerId), ct);
+                return Results.Ok(result);
+            })
+            .RequireAuthorization()
+            .WithName("GetMyCars")
+            .WithSummary("Returns cars listed by the current user");
 
         app.MapGet(ApiRoutes.Cars.ById, async (
                 [AsParameters] GetCarByIdRequest request,

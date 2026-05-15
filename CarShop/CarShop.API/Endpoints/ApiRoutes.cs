@@ -23,4 +23,9 @@ public static class ApiRoutes
         public const string Register = ApiBase + "/users/register";
         public const string Login = ApiBase + "/users/login";
     }
+
+    public static class Brands
+    {
+        public const string Base = ApiBase + "/brands";
+    }
 }

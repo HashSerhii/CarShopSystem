@@ -1,13 +1,20 @@
-namespace CarShop.Application.Commands;
-
 using CarShop.Application.Mediator.Interfaces;
 using CarShop.Application.Repositories;
+using CarShop.Application.Services;
 
-public sealed record AddFavoriteCommand(string UserId, int CarId);
+namespace CarShop.Application.Commands;
 
-public sealed class AddFavoriteCommandHandler(IAddFavoriteRepository repository)
-	: ICommandHandler<AddFavoriteCommand>
+public sealed record AddFavoriteCommand(int CarId);
+
+public sealed class AddFavoriteCommandHandler(
+    IAddFavoriteRepository repository,
+    IUserContext userContext) : ICommandHandler<AddFavoriteCommand>
 {
-	public Task ExecuteAsync(AddFavoriteCommand command, CancellationToken cancellationToken) =>
-		repository.AddFavoriteAsync(command.UserId, command.CarId, cancellationToken);
+    public async Task ExecuteAsync(AddFavoriteCommand command, CancellationToken cancellationToken)
+    {
+        var userId = userContext.GetCurrentUserId()
+                     ?? throw new UnauthorizedAccessException("User ID not found in token");
+
+        await repository.AddFavoriteAsync(userId, command.CarId, cancellationToken);
+    }
 }

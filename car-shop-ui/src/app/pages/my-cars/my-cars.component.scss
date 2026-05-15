@@ -1,0 +1,19 @@
+.card-wrap {
+  position: relative;
+}
+
+.delete-btn,
+.remove-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+.empty-state a {
+  margin-top: 16px;
+}

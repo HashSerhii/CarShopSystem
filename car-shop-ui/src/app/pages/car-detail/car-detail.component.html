@@ -1,0 +1,52 @@
+<div class="page detail">
+  @if (loading) {
+    <div class="loading"><mat-spinner /></div>
+  } @else if (car) {
+    <a class="back" routerLink="/">← Назад до каталогу</a>
+
+    <div class="layout">
+      <div class="gallery">
+        <img class="hero" [src]="mainImage()" [alt]="car.brand + ' ' + car.model" />
+        @if (gallery().length > 1) {
+          <div class="thumbs">
+            @for (url of gallery(); track url) {
+              <img [src]="url" alt="" />
+            }
+          </div>
+        }
+      </div>
+
+      <div class="info">
+        <h1>{{ car.brand }} {{ car.model }}</h1>
+        <p class="year">{{ car.year }} рік</p>
+        <p class="price">{{ car.price | currency: 'UAH' : 'symbol-narrow' : '1.0-0' }}</p>
+
+        <p class="description">{{ car.description || 'Без опису' }}</p>
+
+        @if (car.ownerPhoneNumber) {
+          <button mat-flat-button color="primary" (click)="callSeller()">
+            <mat-icon>phone</mat-icon>
+            {{ car.ownerPhoneNumber }}
+          </button>
+        }
+
+        <div class="actions">
+          @if (auth.isLoggedIn()) {
+            <button mat-stroked-button (click)="toggleFavorite()" [disabled]="favoriteLoading">
+              <mat-icon>favorite_border</mat-icon>
+              В обране
+            </button>
+            @if (auth.isAdmin()) {
+              <button mat-stroked-button color="warn" (click)="deleteCar()">
+                <mat-icon>delete</mat-icon>
+                Видалити (Admin)
+              </button>
+            }
+          } @else {
+            <a mat-flat-button color="primary" routerLink="/login">Увійти, щоб звʼязатись</a>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
