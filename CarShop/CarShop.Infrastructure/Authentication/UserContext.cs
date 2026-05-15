@@ -19,4 +19,11 @@ public class UserContext: IUserContext
 
         return user?.FindFirstValue(ClaimTypes.NameIdentifier);
     }
+
+    public bool IsInRole(string role)
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        return user?.IsInRole(role) ?? false;
+    }
 }

@@ -12,4 +12,6 @@ public interface IGetCarsRepository
     Task<int> AddCarAsync(Car car, CancellationToken cancellationToken);
 
     Task<bool> DeleteCarAsync(int id, CancellationToken cancellationToken);
+
+    Task<string?> GetCarOwnerIdAsync(int carId, CancellationToken cancellationToken);
 }

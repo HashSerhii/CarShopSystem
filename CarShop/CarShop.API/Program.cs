@@ -1,10 +1,6 @@
+using CarShop.API;
 using CarShop.API.Endpoints;
-using CarShop.Application;
-using Microsoft.EntityFrameworkCore;
 using CarShop.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using CarShop.Domain;
-using CarShop.Application.Models;
 using CarShop.ApplicationExtensions;
 
 
@@ -16,9 +12,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
+
+await IdentityDbSeeder.SeedAsync(app.Services);
 
 if (app.Environment.IsDevelopment())
 {
@@ -27,6 +25,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -7,7 +7,7 @@ public sealed record CarDetailModel(
     int Year,
     decimal Price,
     string? Description,
-    string MainPhotoUrl,
-    List<string>? AllPhotoUrls
-    
+    string? MainPhotoUrl,
+    List<string>? AllPhotoUrls,
+    string? OwnerPhoneNumber
     );

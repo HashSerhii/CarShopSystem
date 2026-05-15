@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using CarShop.Domain;
 using CarShop.Application.Models;
+using CarShop.Application.Constants;
 
 namespace CarShop.Application.Services;
 
@@ -9,15 +10,18 @@ namespace CarShop.Application.Services;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IJwtTokenGenerator jwtTokenGenerator)
+            IJwtTokenGenerator jwtTokenGenerator,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _roleManager = roleManager;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto dto)
@@ -25,10 +29,21 @@ namespace CarShop.Application.Services;
             var user = new User
             {
                 UserName = dto.Email,
-                Email = dto.Email
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber
             };
         
             var result = await _userManager.CreateAsync(user, dto.Password);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
+            if (await _roleManager.RoleExistsAsync(Roles.User))
+            {
+                await _userManager.AddToRoleAsync(user, Roles.User);
+            }
+
             return result;
         }
 
@@ -45,7 +60,7 @@ namespace CarShop.Application.Services;
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user is null) return null;
 
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var token = await _jwtTokenGenerator.GenerateTokenAsync(user);
 
             return new AuthResponseDto
             {
